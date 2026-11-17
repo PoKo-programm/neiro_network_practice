@@ -3,6 +3,12 @@ from .exceptions import InvalidLayerSizeError, MismatchedDataError
 
 
 class NeuralNetwork:
+    """Полносвязная сеть с произвольным числом слоёв.
+
+    :param layer_sizes: размеры слоёв, например [n_features, 16, 1]
+    :param activation: 'relu' или 'sigmoid'
+    :param seed: зерно генератора случайных чисел
+    """
     SUPPORTED_ACTIVATIONS = ("relu", "sigmoid")
 
     def __init__(self, layer_sizes, activation="relu", seed=None):
@@ -21,6 +27,7 @@ class NeuralNetwork:
         self.loss_history = []
 
     def _init_params(self):
+        """Инициализация весов (Xavier для sigmoid, He для ReLU)."""
         weights, biases = [], []
         for i in range(len(self.layer_sizes) - 1):
             n_in = self.layer_sizes[i]
@@ -49,6 +56,7 @@ class NeuralNetwork:
         return 1.0 / (1.0 + np.exp(-z))
 
     def forward(self, X):
+        """Прямой проход. Возвращает (выход, кэш для backprop)."""
         if X.ndim != 2:
             raise MismatchedDataError("X должен быть двумерным массивом")
         if X.shape[1] != self.layer_sizes[0]:
@@ -70,6 +78,7 @@ class NeuralNetwork:
         return current, (activations, zs)
 
     def backward(self, cache, y_true, learning_rate):
+        """Обратный проход и шаг градиентного спуска."""
         activations, zs = cache
         batch_size = y_true.shape[0]
         delta = (activations[-1] - y_true) / batch_size
@@ -83,6 +92,7 @@ class NeuralNetwork:
             self.biases[i] -= learning_rate * d_biases
 
     def train(self, X, y, epochs, learning_rate, batch_size):
+        """Обучение мини-батчами с записью истории ошибки."""
         y = np.asarray(y).reshape(-1, 1)
         if X.shape[0] != y.shape[0]:
             raise MismatchedDataError("X и y разной длины")
@@ -102,18 +112,22 @@ class NeuralNetwork:
             self.loss_history.append(epoch_loss / X.shape[0])
 
     def predict(self, X):
+        """Возвращает вероятности принадлежности к классу 1."""
         output, _ = self.forward(X)
         return output
 
     def predict_classes(self, X, threshold=0.5):
+        """Возвращает бинарные метки (0/1)."""
         return (self.predict(X) >= threshold).astype(int)
 
     def save(self, path):
+        """Сохраняет веса и конфигурацию в .npz."""
         data = {f"weight_{i}": w for i, w in enumerate(self.weights)}
         data.update({f"bias_{i}": b for i, b in enumerate(self.biases)})
         np.savez(path, **data)
 
     def load(self, path):
+        """Загружает веса из .npz, проверяя размерности."""
         with np.load(path) as data:
             n_layers = len(self.weights)
             try:

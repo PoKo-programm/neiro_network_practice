@@ -3,11 +3,13 @@ from .exceptions import DatasetFileError, MismatchedDataError
 
 
 class DatasetManager:
+    """Управляет загрузкой CSV и подготовкой выборок."""
     def __init__(self):
         self.features = None
         self.target = None
 
     def load_csv(self, path):
+        """Загружает CSV: первая строка — заголовки, последний столбец — цель."""
         try:
             data = np.genfromtxt(path, delimiter=",", skip_header=1)
         except OSError as exc:
@@ -25,6 +27,7 @@ class DatasetManager:
         return self.features, self.target
 
     def normalize(self, method="minmax"):
+        """Нормализация признаков: 'minmax' или 'standard'."""
         if self.features is None:
             raise MismatchedDataError("Сначала загрузите данные")
         if method == "minmax":
@@ -40,6 +43,7 @@ class DatasetManager:
             raise MismatchedDataError(f"Неизвестный метод: {method}")
 
     def split(self, test_ratio=0.2, shuffle=True, seed=42):
+        """Делит выборку на train/test с заданной пропорцией."""
         if not 0 < test_ratio < 1:
             raise MismatchedDataError("test_ratio должен быть в (0, 1)")
         n_samples = len(self.features)
