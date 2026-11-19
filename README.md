@@ -1,44 +1,35 @@
-# neiro_network_practice
 # Практическое задание по дисциплине «Основы нейронных сетей»
 
 Репозиторий содержит три части практического задания: ООП-реализацию многослойного перцептрона, CLI-утилиту подготовки данных и многопоточную/многопроцессорную аугментацию.
 
 ## Структура
 
-neural_network_practice/
-├── common/              # общие исключения для всех частей
-├── part1_mlp/           # ООП-нейросеть + консольное меню
-├── part2_prepare/       # CLI prepare и doctor
-├── part3_parallel/      # producer-consumer + multiprocessing
-├── data/
-│   ├── input/           # исходные данные (CSV, изображения)
-│   └── output/          # артефакты: .npy, веса, performance_report.json
-├── logs/
-├── requirements.txt
-├── .env.example
-└── .gitignore
+- common/ — общие исключения для всех частей
+- part1_mlp/ — ООП-нейросеть и консольное меню
+- part2_prepare/ — CLI prepare и doctor
+- part3_parallel/ — producer-consumer и multiprocessing
+- data/input/ — исходные данные (CSV, изображения)
+- data/output/ — артефакты: .npy, веса, performance_report.json
+- logs/ — логи
+- requirements.txt — зависимости
+- .env.example — образец конфигурации
+- .gitignore — исключения Git
 
 ## Установка
 
-python -m venv .venv
-source .venv/bin/activate    # Linux/macOS
-.venv\Scripts\activate       # Windows PowerShell
-python -m pip install -r requirements.txt
+- Создайте виртуальное окружение: python -m venv .venv
+- Активируйте: source .venv/bin/activate (Linux/macOS) или .venv\Scripts\activate (Windows PowerShell)
+- Установите зависимости: python -m pip install -r requirements.txt
 
 ## Запуск
 
-Часть 1. ООП-нейросеть:
+Часть 1. ООП-нейросеть: python -m part1_mlp.app.main
 
-python -m part1_mlp.app.main
+Часть 2. Подготовка данных: python -m part2_prepare.app.cli prepare --path data/input --ext .csv --output data/output/dataset.npy
 
-Часть 2. Подготовка данных:
+Проверка окружения: python -m part2_prepare.app.cli doctor
 
-python -m part2_prepare.app.cli prepare --path data/input --ext .csv --output data/output/dataset.npy
-python -m part2_prepare.app.cli doctor
-
-Часть 3. Параллельная аугментация:
-
-python -m part3_parallel.app.producer_consumer --path data/input/images --ext .jpg,.png --output data/output/performance_report.json --log-level DEBUG
+Часть 3. Параллельная аугментация: python -m part3_parallel.app.producer_consumer --path data/input/images --ext .jpg,.png --output data/output/performance_report.json --log-level DEBUG
 
 ## Конфигурация
 
@@ -46,7 +37,8 @@ python -m part3_parallel.app.producer_consumer --path data/input/images --ext .j
 
 ## Требования
 
-Python 3.10+ (используется синтаксис str | None). Зависимости: numpy, pillow, python-dotenv, matplotlib, flake8.
+- Python 3.10+ (используется синтаксис str | None)
+- Зависимости: numpy, pillow, python-dotenv, matplotlib, flake8
 
 ## Проверка стиля
 
