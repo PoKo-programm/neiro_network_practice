@@ -1,0 +1,8 @@
+{
+    "sequential_sec": 0.581,
+    "parallel_sec": 0.656,
+    "speedup": 0.89,
+    "files_processed": 13,
+    "process_workers": 12,
+    "cpu_count": 12
+}
